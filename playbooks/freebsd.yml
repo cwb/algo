@@ -1,18 +1,11 @@
 ---
-  
-- name: Install prerequisites
+
+- name: FreeBSD | Install prerequisites
   raw: sleep 10 && sudo pkg install -y python27
   tags:
     - freebsd
 
-- name: Configure defaults
+- name: FreeBSD | Configure defaults
   raw: sudo ln -sf /usr/local/bin/python2.7 /usr/bin/python2.7
   tags:
     - freebsd
-
-- name: Ensure the algo ssh key exist on the server
-  authorized_key:
-    user: "{{ ansible_ssh_user }}"
-    state: present
-    key: "{{ lookup('file', '{{ SSH_keys.public }}') }}"
-  tags: [ 'always' ]
