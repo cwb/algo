@@ -2,7 +2,7 @@
 
 set -e
 
-SKIP_TAGS="_null encrypted"
+SKIP_TAGS="_null encrypted freebsd"
 
 additional_roles () {
 

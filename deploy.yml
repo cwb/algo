@@ -49,6 +49,10 @@
       include: playbooks/common.yml
       tags: [ 'digitalocean', 'ec2', 'gce', 'azure', 'local', 'pre' ]
 
+    - name: FreeBSD pre-tasks
+      include: playbooks/freebsd.yml
+      tags: [ 'freebsd' ]
+
     - set_fact:
         cloud_deployment: true
       tags: ['cloud']
