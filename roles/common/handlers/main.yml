@@ -11,5 +11,5 @@
   shell: >
     ifconfig lo100 destroy || true &&
     ifconfig lo100 create &&
-    ifconfig lo100 inet 172.16.0.1 netmask 255.255.255.255 &&
+    ifconfig lo100 inet {{ local_service_ip }} netmask 255.255.255.255 &&
     ifconfig lo100 inet6 FCAA::1/64; echo $?
