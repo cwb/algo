@@ -1,0 +1,19 @@
+---
+
+- set_fact:
+    config_prefix: "/usr/local/"
+    root_group: wheel
+
+- name: Activate IPFW
+  shell: >
+    kldstat -n ipfw.ko || kldload ipfw ; sysctl net.inet.ip.fw.enable=0 &&
+    bash /etc/rc.firewall && sysctl net.inet.ip.fw.enable=1
+
+- name: Enable strongswan
+  lineinfile: dest=/etc/rc.conf regexp=^strongswan_enable= line='strongswan_enable="YES"'
+
+- set_fact:
+    strongswan_enabled_plugins:
+      - "{{ strongswan_enabled_plugins }}"
+      - kernel-pfroute
+      - kernel-pfkey

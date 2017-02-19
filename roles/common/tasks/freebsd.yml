@@ -1,0 +1,39 @@
+---
+
+- set_fact:
+    tools:
+      - git
+      - screen
+      - coreutils
+      - openssl
+    sysctl:
+      forwarding:
+        - net.inet.ip.forwarding
+        - net.inet6.ip6.forwarding
+  tags:
+    - always
+
+- name: Loopback included into the rc config
+  blockinfile:
+    dest: /etc/rc.conf
+    create: yes
+    block: |
+      cloned_interfaces="lo100"
+      ifconfig_lo100="inet {{ local_service_ip }}/255.255.255.255"
+      ifconfig_lo100="inet6 FCAA::1/64"
+  notify:
+    - restart loopback bsd
+  tags:
+    - always
+
+- name: Enable the gateway features
+  lineinfile: dest=/etc/rc.conf regexp='^{{ item.param }}.*' line='{{ item.param }}={{ item.value }}'
+  with_items:
+    - { param: firewall_enable, value: '"YES"' }
+    - { param: firewall_type, value: '"open"' }
+    - { param: gateway_enable, value: '"YES"' }
+    - { param: natd_enable, value: '"YES"' }
+    - { param: natd_interface, value: '""' }
+    - { param: natd_flags, value: '"-dynamic -m"' }
+  tags:
+    - always
