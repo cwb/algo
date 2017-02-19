@@ -16,12 +16,6 @@
     algo_params: "rsa:2048"
   when: Win10_Enabled is defined and Win10_Enabled == "Y"
 
-- include: ubuntu.yml
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- include: freebsd.yml
-  when: ansible_distribution == 'FreeBSD'
-
 - name: Install StrongSwan
   package: name=strongswan state=present
 
@@ -30,6 +24,12 @@
 
 - name: Ensure that the strongswan user exist
   user: name=strongswan group=strongswan state=present
+
+- include: ubuntu.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- include: freebsd.yml
+  when: ansible_distribution == 'FreeBSD'
 
 - name: Setup the strongswan.conf file from our template
   template: src=strongswan.conf.j2 dest={{ config_prefix|default('/') }}etc/strongswan.conf owner=root group="{{ root_group|default('root') }}" mode=0644
